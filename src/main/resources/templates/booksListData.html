@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>图书列表</title>
+
+	</head>
+	<body>
+		<!--图书列表 begin-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-md-3" th:each="book:${bookList}">
+					<div class="thumbnail">
+						<a href="details.html" th:href="@{/home/detail(id=${book.id})}"><img src="images/beiwei78.jpg" th:src="@{'/images/' + ${book.imgUrl}}" alt="通用的占位符缩略图"></a>
+						<div class="caption">
+							<h3 th:classappend="h3-height" th:text="${book.name}">北纬78°</h3>
+							<p th:classappend="p-height">价格:<span th:text="${book.newPrice}">19.5</span>元&nbsp;&nbsp;作者:<span th:text="${book.author}">陈丹燕</span>&nbsp;&nbsp;</p>
+							<p>
+								<a href="details.html" th:href="@{/home/detail(id=${book.id})}">
+									更多信息
+								</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--图书列表end-->
+
+		<!--分页begin-->
+		<div class="container">
+			<div class="row text-center">
+				<div class="col-md-12">
+					<ul class="pagination">
+						<li><a href="javascript:void(0)" th:onclick="loadData(1,[[${category}]])">首页</a></li>
+						<li><a href="javascript:void (0)" th:onclick="loadData([[${pre}]],[[${category}]])">&laquo;</a></li>
+						<li th:each="i:${#numbers.sequence(1,pages)}" th:class="${cur == i} ? 'active' :''">
+							<a href="javascript:void(0)" th:text="${i}" th:onclick="loadData([[${i}]],[[${category}]])">1</a>
+						</li>
+						<li><a href="javascript:void(0)" th:onclick="loadData([[${next}]],[[${category}]])">&raquo;</a></li>
+						<li><a href="javascript:void(0)" style="border: 1px solid #ddd;" th:onclick="loadData([[${pages}]],[[${category}]])">尾页</a></li>
+						<li><a style="border: 0px;margin-left: 0px;" th:text="${'当前页'+cur+'/'+pages+'总页'}">当前页3/5总页</a></li>
+						<li>
+
+							<div id="search" class="input-group" style="positon:relative;">
+								<input id="inputPage" type="text" class="form-control" placeholder="跳转指定页" />
+								<span class="input-group-btn">
+									<button class="btn btn-info btn-search" th:onclick="goPage([[${category}]])">GO</button>
+								</span>
+							</div>
+						</li>
+						<li><a style="padding-top: 0px;border: 0px;">
+							<label>每页显示:</label>
+							<select id="pageSize" class="form-control" style="width: 100px;display: inline;">
+								<option value="2">2</option>
+								<option value="4">4</option>
+								<option value="6">6</option>
+								<option value="8">8</option>
+							</select>
+							<label>条</label>
+						</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--分页end-->
+	</body>
+</html>

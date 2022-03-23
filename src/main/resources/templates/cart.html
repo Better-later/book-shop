@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的购物车</title>
+		<link type="text/css" rel="stylesheet" href="dist/css/bootstrap.min.css" th:href="@{/dist/css/bootstrap.min.css}">
+		<link rel="stylesheet" type="text/css" href="css/index.css" th:href="@{/css/index.css}"/>
+		<link rel="stylesheet" type="text/css" href="css/cart.css" th:href="@{/css/cart.css}"/>
+		<link rel="stylesheet" type="text/css" href="css/animate.css" th:href="@{/css/animate.css}"/>
+	</head>
+
+	<body>
+		<!--导航部分  begin-->
+		<div class="container" style="margin-top: 5px;">
+			<nav class="navbar navbar-default well-sm" style="padding-left: 0px;" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
+				            <span class="sr-only">切换导航</span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+        				</button>
+						<a class="navbar-brand" href="#">优客书城</a>
+					</div>
+					<div class="collapse navbar-collapse" id="example-navbar-collapse">
+						<ul class="nav navbar-nav pull-left">
+							<li>
+								<a href="index.html">首页</a>
+							</li>
+							<li>
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+										图书类型
+										<b class="caret"></b>
+									</a>
+									<ul class="dropdown-menu">
+										<li>
+											<a href="books_list1.html">精选图书</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="books_list1.html">推荐图书</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a href="books_list1.html">特价图书</a>
+										</li>
+										<li class="divider"></li>
+									</ul>
+								</li>
+							</li>
+							<li>
+								<a href="#" data-toggle="modal" data-target="#myModal">登录</a>
+							</li>
+							<li>
+								<a href="index.html">安全退出</a>
+							</li>
+							<li>
+								<a href="#" data-toggle="modal" data-target="#register">注册</a>
+							</li>
+							<li>
+								<a href="order_list.html" th:href="@{/order/list}">我的订单</a>
+							</li>
+							<li class="active">
+								<a href="cart.html" th:href="@{/cart.html}"><span class="glyphicon glyphicon-shopping-cart"> </span>我的购物车</a>
+							</li>
+						</ul>
+						<div class="input-group col-md-3 pull-right" style="positon:relative;padding: 7px;">
+							<input type="text" class="form-control" placeholder="请输入图书名" />
+							<span class="input-group-btn">  
+					            <button class="btn btn-info btn-search">
+					            	<span class="glyphicon glyphicon-search"></span>
+							</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<!--导航部分 end-->
+
+		<!--最顶端轮播图片 begin-->
+		<div id="gcarouse" class="container">
+			<!--轮播-->
+			<div id="myCarousel" class="carousel slide">
+				<!-- 轮播（Carousel）指标 -->
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+				</ol>
+				<!-- 轮播（Carousel）项目 -->
+				<div class="carousel-inner">
+					<div class="item active">
+						<a href="details.html"><img src="images/advert1.jpg" th:src="@{/images/advert1.jpg}" class="pull-left" alt="First slide"></a>
+					</div>
+					<div class="item">
+						<a href="details.html"><img src="images/advert2.jpg" th:src="@{/images/advert2.jpg}" class="pull-left" alt="First slide"></a>
+					</div>
+					<div class="item">
+						<a href="details.html"><img src="images/advert3.jpg" th:src="@{/images/advert3.jpg}" class="pull-left" alt="First slide"></a>
+					</div>
+				</div>
+
+				<!-- 轮播（Carousel）导航 -->
+				<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+				<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+			</div>
+		</div>
+		<!--最顶端轮播图片 end-->
+		<!--购物车 begin-->
+		<!--外层div-->
+		<div class="container">
+			<!--左边-->
+			<div class="col-md-8 col-sm-12">
+				<!--左边-->
+				<ol class="breadcrumb">
+					<li>
+						<a href="#" class="text-success"><span class="glyphicon glyphicon-heart"></span>&nbsp;&nbsp;我的宝贝</a>
+					</li>
+				</ol>
+
+				<!--购物车表格 begin-->
+				<div class="table-responsive" id="imgDiv">
+					<table class="table table-hover table-striped" style="vertical-align:middle;">
+						<thead>
+							<tr>
+								<td colspan="8">
+									<label class="text-primary">显示条数:</label>
+									<select id="cartSzie" class="form-control" style="display: inline" onchange="displaySize(this)">
+										<option value="2">2</option>
+										<option value="4">4</option>
+										<option value="6" selected>6</option>
+										<option value="8">8</option>
+									</select>
+								</td>
+							</tr>
+							<tr class="text-success success">
+								<th><input type="checkbox" id="selectAll" onclick="selectAll(this)"></th>
+								<th id="sequence">序号</th>
+								<th>图片</th>
+								<th>书名</th>
+								<th>单价</th>
+								<th>数量</th>
+								<th>合计</th>
+							</tr>
+						</thead>
+						<tbody id="tby">
+							<tr th:each="cart,iter:${cartList}">
+								<td><input type="checkbox" name="cks" th:value="${cart.id}"></td>
+								<td th:text="${cart.bookId}">1001</td>
+								<td><img src="images/tenxunchuan.jpg" th:src="@{'/images/' + ${cart.imgUrl}}"></td>
+								<td th:text="${cart.bookName}">腾讯传</td>
+								<td th:text="${cart.newPrice + '元'}">35.0元</td>
+								<td>
+									<div class='input-group' style='width: 105px;'>
+										<span class='input-group-btn'>
+										<button class='btn btn-default' type='button' th:onclick="minus([[${cart.id}]],[[${cart.newPrice}]],[[${iter.index}]])">-</button>
+										</span><input type='text' th:id="${'cartCount' + iter.index}" class='form-control' th:value="${cart.count}"><span class='input-group-btn'>
+										<button class='btn btn-default' type='button' th:onclick="plus([[${cart.id}]],[[${cart.newPrice}]],[[${iter.index}]])">+</button>
+										</span>
+									</div>
+								</td>
+								<td th:text="${cart.newPrice * cart.count}" th:id="${'cartPrice' + iter.index}">100$</td>
+							</tr>
+
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="5"></td>
+								<td class="text-success">总价:</td>
+								<td class="text-success cartPrice" th:text="${session.userCartInfo.totalPrice}">345</td>
+							</tr>
+							<tr style="background-color: white;">
+								<td>
+									<a href="index.html" th:href="@{/home/index}" class="btn btn-info">&lt;&lt;继续购买</a>
+								</td>
+								<td><button class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="del()">删除商品</button></td>
+								<td colspan="4"></td>
+								<td>
+									<a href="javascript:void(0)" th:onclick="confirmOrder()" class="btn btn-warning">结算商品</a>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<!--购物车 end-->
+
+				<!--删除提示模态框 begin-->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<!--如果没有选中任何一个商品的时候,出现-->
+					<div id="first_del" style="display: none;">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title text-warning" id="myModalLabel">抱歉!请您先选择商品!</h4>
+								</div>
+								<div class="modal-body">请选进行勾选!再执行删除删除!</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+					</div>
+					<!--first_del  end-->
+
+					<!--如果没有选中了一个商品的时候,出现-->
+					<div id="two_del" style="display: none;">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title text-warning" id="myModalLabel">删除商品,慎重操作!</h4>
+								</div>
+								<div class="modal-body">此操作一旦进行,数据将不可恢复!</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-danger" onclick="delRows(this)">确定删除</button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+					</div>
+					<!--two_del  end-->
+
+					<!--第三个模态框开始-->
+					<div id="third_del" style="display: none;">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title text-warning" id="myModalLabel">抱歉!请您先选择商品!</h4>
+								</div>
+								<div class="modal-body">请选进行勾选!再执行结算!</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+					</div>
+					<!--第三个模态框结束-->
+				</div>
+				<!--删除提示模态框 end-->
+			</div>
+
+			<!--右边-->
+			<div class="col-md-4 col-sm-3 col-xs-8">
+				<ol class="breadcrumb ">
+					<li>
+						<a href="# " class="text-success "><span class="glyphicon glyphicon-shopping-cart "></span>我的购物车</a>
+					</li>
+					<li>
+						<a href="# " th:text="${session.userCartInfo.getNum() +'个商品'}">3个商品</a>
+					</li>
+					<li>
+						<a href="# " th:text="${'总价'+session.userCartInfo.totalPrice+'元'}" id="total">总价100元</a>
+					</li>
+				</ol>
+
+			<!--猜您喜欢-->
+				<div>
+					<span class="text-info"><span class="glyphicon glyphicon-heart"></span><span style="font-size: 20px; ">&nbsp;&nbsp;猜您喜欢</span></span>
+					<div class="row" id="love">
+						<div class="col-sm-12 col-md-12 wow fadeInRight animated">
+							<div class="thumbnail">
+								<a href="details.html"><img src="images/cikehuakai.jpg " th:src="@{/images/cikehuakai.jpg}" style="height: 200px; " alt="通用的占位符缩略图 "></a>
+								<div class="caption ">
+									<h3>此刻花开</h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-12 wow fadeInRight animated">
+							<div class="thumbnail ">
+								<a href="details.html"><img src="images/jindumanbu.jpg " th:src="@{/images/jindumanbu.jpg}"style="height: 200px; " alt="通用的占位符缩略图 "></a>
+								<div class="caption ">
+									<h3>京都漫步</h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-12 wow fadeInRight animated">
+							<div class="thumbnail ">
+								<a href="details.html"><img src="images/lapulasidemonv.jpg" th:src="@{/images/lapulasidemonv.jpg}" style="height: 200px; " alt="通用的占位符缩略图 "></a>
+								<div class="caption ">
+									<h3>拉普拉斯的魔女</h3>
+								</div>
+							</div>
+						</div>
+						<div>
+							<ul class="pager ">
+								<li>
+									<a href="#" onclick="pageUp() ">&larr;上一页</a>
+									<a href="#" onclick="pageDown() ">下一页 &rarr;</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!--喜欢end-->
+			</div>
+		</div>
+
+		<div class="container">
+			<!--首页底部信息 begin-->
+			<div class="container ">
+				<div class="row ">
+					<div class="col-md-offset-2 col-md-8">
+						<div class="row ">
+							<div class="col-md-offset-2 col-md-2">
+								<img src="images/logo.png " th:src="@{/images/logo.png}">
+							</div>
+							<div class="col-md-6" style="margin-top: 10px;">
+								<div class="row">
+									<div class="col-md-offset-2 col-md-10">
+										<a href="http://www.gem-inno.com/" th:href="@{http://www.gem-inno.com/}">苏州高博应诺信息科技有限公司&copy;所有</a>
+									</div>
+								</div>
+								<div class="gap"></div>
+								<div class="row">
+									<div class="col-md-offset-2 col-md-10">
+										<span class="text-info">高博教育&reg; |&nbsp;</span>
+										<span class="text-info"><a href="http://www.xmgc360.com" th:href="@{http://www.xmgc360.com}">项目工厂</a> |&nbsp;</span>
+										<span class="text-info">2012－2020 </span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end-->
+
+		<!--引入js文件-->
+		<script src="dist/js/jquery.min.js" th:src="@{/dist/js/jquery.min.js}"></script>
+		<script src="js/wow.js" th:src="@{/js/wow.js}"></script>
+		<script src="js/carousel.js" th:src="@{/js/carousel.js}" type="text/javascript"></script>
+		<script src="dist/js/bootstrap.min.js" th:src="@{/dist/js/bootstrap.min.js}"></script>
+		<script src="js/details.js" th:src="@{/js/details.js}" type="text/javascript" charset="utf-8"></script>
+		<script src="js/cart.js" th:src="@{/js/cart.js}" type="text/javascript" charset="utf-8"></script>
+		<script th:inline="javascript">
+			//获取应用路径
+			var contextPath = [[${#request.getContextPath()}]];
+		</script>
+		<script type="text/javascript">
+			if(!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
+				new WOW().init();
+			};
+			//修改商品数量
+			function minus(cartId,price,index) {
+				//数量减一
+				var count = parseInt($("#cartCount"+index).val());
+				var _price = parseFloat(price);
+				if (count != 1){
+					$("#cartCount"+index).val(count - 1);
+					$("#cartPrice" + index).html((count - 1) * _price);
+					updateCart(cartId,count - 1);
+				}
+			}
+
+			//增加数量
+			function plus(cartId,price,index) {
+				//数量加一
+				var count = parseInt($("#cartCount"+index).val());
+				var _price = parseFloat(price);
+				$("#cartCount"+index).val(count + 1);
+				$("#cartPrice" + index).html((count + 1) * _price);
+				updateCart(cartId,count + 1);
+			}
+
+			//修改后台购物车记录
+			function updateCart(cartId,count) {
+				$.ajax({
+					url: contextPath + "/cart/update",
+					data:{"id":cartId,"count":count},
+					method:"post",
+					success:function (data) {
+						$("#total").html('总价' + data + '元');
+						$(".cartPrice").html(data);
+					}
+				})
+			}
+
+			//确认订单
+			function confirmOrder() {
+				//存储购物记录的id
+				var ids = '';
+
+				var thirdModel = document.getElementById("third_del");
+				//判断是否选择了商品
+				var count = 0;
+				//获取所有的checkbox
+				var cks = document.getElementsByName("cks");
+				//遍历
+				for(var i = 0; i < cks.length; i++) {
+					if(cks[i].checked) {
+						count++;
+						ids += cks[i].value + ",";
+					}
+				}
+				if(count == 0) {
+					alert('请选择图书！');
+					// thirdModel.style.display = "block";
+					// $("#third_del").css("display","block");
+				} else {
+					window.location.href = contextPath + '/order/confirm?ids=' + ids.substring(0,ids.length-1);
+				}
+			}
+		</script>
+	</body>
+
+</html>

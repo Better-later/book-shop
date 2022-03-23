@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper代理方法开发，namespace有特殊重要的作用
+-->
+<mapper namespace="com.book.bookshop.mapper.OrderMapper">
+
+    <resultMap id="orderAndOrderDetailResultMap" type="com.book.bookshop.entity.Order">
+        <!--订单信息-->
+        <id column="id" property="id"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="address_id" property="addressId"></result>
+        <result column="order_num" property="orderNum"></result>
+        <result column="order_status" property="orderStatus"></result>
+        <result column="create_date" property="createDate"></result>
+
+        <!--用户信息-->
+        <association property="user" javaType="com.book.bookshop.entity.User">
+            <id column="user_id" property="id"></id>
+            <result column="username" property="username"></result>
+            <result column="phone" property="phone"></result>
+        </association>
+
+        <!--地址信息-->
+        <association property="address" javaType="com.book.bookshop.entity.Address">
+            <id column="address_id" property="id"></id>
+            <result column="province" property="province"></result>
+            <result column="city" property="city"></result>
+            <result column="area" property="area"></result>
+            <result column="detail_address" property="detailAddress"></result>
+        </association>
+
+        <!--订单明细-->
+        <collection property="orderItems" ofType="com.book.bookshop.entity.OrderItem">
+            <id column="order_item_id"></id>
+            <result column="book_id" property="bookId"></result>
+            <result column="order_id" property="orderId"></result>
+            <result column="count" property="count"></result>
+
+            <!--图书信息-->
+            <association property="book" javaType="com.book.bookshop.entity.Book">
+                <id column="book_id" property="id"></id>
+                <result column="name" property="name"></result>
+                <result column="img_url" property="imgUrl"></result>
+                <result column="new_price" property="newPrice"></result>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findOrderAndOrderDetailListByUser"  resultMap="orderAndOrderDetailResultMap">
+    SELECT
+        bo.*,
+        bu.username,
+        bu.phone,
+        ba.province,
+        ba.city,
+        ba.area,
+        ba.detail_address,
+        boi.id order_item_id,
+        boi.book_id,
+        boi.order_id,
+        boi.count,
+        bb.id book_id,
+        bb.img_url,
+        bb.name,
+        bb.new_price
+    FROM
+        bs_order bo,
+        bs_user bu,
+        bs_address ba,
+        bs_order_item boi,
+        bs_book bb
+    WHERE
+        bo.`user_id` = bu.`id`
+        AND bo.`address_id` = ba.`id`
+        AND bo.`id` = boi.`order_id`
+        AND boi.`book_id` = bb.`id` AND bo.`user_id` = #{id};
+    </select>
+
+
+</mapper>
